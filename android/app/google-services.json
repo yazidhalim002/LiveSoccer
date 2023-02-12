@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "133318137045",
+    "project_id": "kooora-24b0f",
+    "storage_bucket": "kooora-24b0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133318137045:android:fef822ccfab838a3ca3e5c",
+        "android_client_info": {
+          "package_name": "com.LiveSoccer.livesoccer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133318137045-ao27ojo2csvhn1inhaqkhf6qj84kofgb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6AycFCFLcCQMjEMPNR_HXIjHGpFikVBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133318137045-ao27ojo2csvhn1inhaqkhf6qj84kofgb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
