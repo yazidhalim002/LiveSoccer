@@ -24,14 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
     http.Response response1 = await http.get(
         Uri.parse('http://api.football-data.org/v4/matches'),
         headers: {'X-Auth-Token': 'a801894567f24f22a38d84e1e1b059ec'});
-   
     String body = response1.body;
     Map data = jsonDecode(body);
-    List standings = data["matches"];
-    print(standings);
+    List Fixture = data["matches"];
+    
+
+    print(Fixture);
     
     setState(() {
-      _fixture = standings;
+      _fixture = Fixture;
     });
 
   }
@@ -252,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       
       
-        //Fixture matches
+        
                     Row(
                       children: [
                         
@@ -270,8 +271,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       ],
                     ),
-                    
-          ALLmatches()
+
+           //Fixture matches         
+          ALLmatches(),
+
+
+          Row(
+                      children: [
+                        
+                        Container(
+                          margin: EdgeInsets.only(top: 100,left: 10),
+                          child: FaIcon(
+                        FontAwesomeIcons.fireFlameCurved,
+                        size: 21,)
+                      ),
+                      Container(
+                      margin: EdgeInsets.only(top: 100),
+                      child: Text('  News',
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold,
+                              fontSize: 17,color: Color.fromARGB(255, 83, 92, 101)),)
+                      ),
+                      ],
+                    ),
       ],
       ),
     ),
@@ -287,8 +308,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 Widget ALLmatches(){
+
+  String match_status = "live";
+
+  Color? color = Color.fromARGB(174, 189, 189, 189) ;
+ 
 List<Widget> matches= [];
     for (var match in _fixture) {
+       if(match['status'] == "LIVE"){
+    color = Colors.green;
+  }
+  else if(match['status'] == "FINISHED"){
+    color = Colors.red[200]!;
+  }
       matches.add(
         Center(
           child: Padding(
@@ -298,22 +330,36 @@ List<Widget> matches= [];
               child: Container(
                 margin: EdgeInsets.all(3),
                   width: 200,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color:Colors.grey),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                  color: color,
+                  )                  ,
                   child: Column(children: [
-                    Text(match['utcDate'].toString().substring(11,16)),
+                    Text(match['status'] != "LIVE"?  match['utcDate'].toString().substring(11,16) : match['minute'].toString()),
                     SizedBox(height: 15,),
                     Row(children: [
-                      Text("  ${match['homeTeam']['shortName']}                        ${match['score']['fullTime']['home']}"),
+ Text("  ${match['homeTeam']['shortName']}"),
+    Spacer(), // <-- add Spacer widget
+    Flexible(
+      child: Text(match['status'] == "SCHEDULED" ?
+        "${match['score']['fullTime']['home']}" : " ",
+        textAlign: TextAlign.right,
+        style: TextStyle(fontSize: 16.0),
+      ),
+    ),
                     ],),
 
                     SizedBox(height: 15,),
                     
                     Row(children: [
-                      Text("  ${match['awayTeam']['shortName']}"),
-SizedBox(width: 115,),
-                      Row(children: [
-                       Text("${match['score']['fullTime']['away']}")
-                    ],)
+                       Text("  ${match['awayTeam']['shortName']}"),
+    Spacer(), // <-- add Spacer widget
+    Flexible(
+      child: Text(match['status'] == "SCHEDULED" ?
+        "${match['score']['fullTime']['away']}" : " ",
+        textAlign: TextAlign.right,
+        style: TextStyle(fontSize: 16.0),
+      ),
+    ),
                     ]),
                     
                     
@@ -335,9 +381,8 @@ SizedBox(width: 115,),
             children: matches
           ),
         );
-        //  return SingleChildScrollView(
-        //    child: Column(
-        //        children: matches,
-        //      ),
-         
 }
+
+
+
+
