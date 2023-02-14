@@ -22,12 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getAllMatches() async {
     http.Response response1 = await http.get(
-        Uri.parse('https://api.football-data.org/v4/matches'),
+        Uri.parse('http://api.football-data.org/v4/matches'),
         headers: {'X-Auth-Token': 'a801894567f24f22a38d84e1e1b059ec'});
+   
     String body = response1.body;
     Map data = jsonDecode(body);
     List standings = data["matches"];
-
+    print(standings);
+    
     setState(() {
       _fixture = standings;
     });
@@ -269,21 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     
-        Container(
-          padding: EdgeInsets.only(top: 500),
-          margin: EdgeInsets.only(top: 150),
-          decoration: BoxDecoration(
-            border: Border.all(width: 1),
-            color: Colors.grey[400],
-            borderRadius: BorderRadius.circular(30)
-          ),
-          // child: ListView.builder(
-          //   itemBuilder: ,
-          //   itemCount: _fixture.length,
-            
-          // ),
-          
-        ),
+          ALLmatches()
       ],
       ),
     ),
@@ -298,55 +286,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-Widget matches(){
+Widget ALLmatches(){
 List<Widget> matches= [];
     for (var match in _fixture) {
       matches.add(
-        Padding(
-          padding: const EdgeInsets.only(left: 10,right: 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Text('Home Team'),
-                    SvgPicture.network(match['hometeam']['crestUrl'].toString(),height: 40,width: 40,),
-                    Text(match['hometeam']['shortName'].toString()),
-                  ],
-                )
-                  
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(match['minute'].toString()),
-                    Row(
-                      children: [
-                        Text(match['score']['fullTime']['home'].toString()),
-                        SizedBox(width: 10,),
-                        Text(match['score']['fullTime']['away'].toString()),
-                      ],
-                    )
-                  ],
-                ) ,
-              ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: InkWell(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.all(3),
+                  width: 200,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color:Colors.grey),
+                  child: Column(children: [
+                    Text(match['utcDate'].toString().substring(11,16)),
+                    SizedBox(height: 15,),
+                    Row(children: [
+                      Text("  ${match['homeTeam']['shortName']}                        ${match['score']['fullTime']['home']}"),
+                    ],),
 
-              Expanded(
-                child: Column(
-                  children: [
-                    Text('Away Team'),
-                    SvgPicture.network(match['awayteam']['crestUrl'].toString(),height: 40,width: 40,),
-                    Text(match['awayteam']['shortName'].toString()),
-                  ],
-                )
-                  
+                    SizedBox(height: 15,),
+                    
+                    Row(children: [
+                      Text("  ${match['awayTeam']['shortName']}"),
+SizedBox(width: 115,),
+                      Row(children: [
+                       Text("${match['score']['fullTime']['away']}")
+                    ],)
+                    ]),
+                    
+                    
+
+                    
+                  ]),
               ),
-            ],
-          ),
-        ),
+            ),
+            
+            ),
+        )
       );
     }
-    return Column(
-      children: matches,
-    );
+    return Container(
+          height: 200,
+          margin: EdgeInsets.only(top: 130),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: matches
+          ),
+        );
+        //  return SingleChildScrollView(
+        //    child: Column(
+        //        children: matches,
+        //      ),
+         
 }
