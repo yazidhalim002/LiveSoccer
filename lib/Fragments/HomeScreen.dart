@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,10 @@ import 'package:livesoccer/AppBar_icons/IPTV.dart';
 import '../DATA/TableScreen.dart';
 import 'package:http/http.dart' as http;
 List _fixture = [];
+
+
+
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,8 +21,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
 
 
   getAllMatches() async {
@@ -38,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
+
+
     @override
   void initState() {
     super.initState();
@@ -45,7 +50,123 @@ class _HomeScreenState extends State<HomeScreen> {
     
   }
 
-  
+
+   int seconds = 0;
+int minute = 0;
+String digitalSecond = "00", digitalMinute = "00" ;
+Timer? timer;
+bool started =false;
+void start(){
+     started =true;
+   Timer timer = Timer.periodic(Duration(seconds : 1), (timer){
+    
+    int localseconds = seconds +1;
+    int localminute = minute;
+
+
+    if(localseconds>59){
+      localminute++;
+    }
+
+
+    setState((){
+      seconds = localseconds;
+      minute = localminute;
+      digitalSecond = (seconds>=10)? "$seconds" : "0$seconds";
+      digitalMinute = (minute>=10)? "$minute" : "0$minute";
+
+    });
+
+   });
+   }
+
+  void pause(){
+    timer!.cancel();
+    setState(() {
+      started=false;
+    });
+  }
+
+
+
+Widget ALLmatches(){
+  Color color ;
+List<Widget> matches= [];
+    for (var match in _fixture) {
+      if(match['status'] == "IN_PLAY"){
+        start();
+      }else if (match['status'] == "PAUSED"){
+        pause();
+      }
+     
+       if(match['status'] == "IN_PLAY"){
+    color = Colors.green;
+  }else if(match['status'] == "FINISHED"){
+    color = Colors.red[200]!;
+  }else{
+    color = Color.fromARGB(174, 189, 189, 189);
+  }
+      matches.add(
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: InkWell(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.all(3),
+                  width: 200,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                  color: color,
+                  )                  ,
+                  child: Column(children: [
+                    Text(match['status'] == "IN_PLAY" ?  "\n"+"$digitalMinute : $digitalSecond" : match['status'] == "PAUSED" ? "\n"+"Half Time" : match['status'] == "TIMED" ? "\n"+match['utcDate'].toString().substring(11,16) :"\n"+ match['status']),
+                    SizedBox(height: 15,),
+                    Row(children: [
+ Text("  ${match['homeTeam']['shortName']}"),
+    Spacer(), // <-- add Spacer widget
+    Flexible(
+      child: Text(match['status'] == "TIMED" ? " " : "${match['score']['fullTime']['home']}",
+        textAlign: TextAlign.right,
+        style: TextStyle(fontSize: 16.0),
+      ),
+    ),
+                    ],),
+
+                    SizedBox(height: 15,),
+                    
+                    Row(children: [
+                       Text("  ${match['awayTeam']['shortName']}"),
+    Spacer(), // <-- add Spacer widget
+    Flexible(
+      child: Text(match['status'] == "TIMED" ? " " : "${match['score']['fullTime']['home']}",
+        textAlign: TextAlign.right,
+        style: TextStyle(fontSize: 16.0),
+      ),
+    ),
+                    ]),
+                    
+                    
+
+                    
+                  ]),
+              ),
+            ),
+            
+            ),
+        )
+      );
+    }
+    return Container(
+          height: 200,
+          margin: EdgeInsets.only(top: 130),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: matches
+          ),
+        );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,8 +372,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
            ),
         ),
-      
-      
         
                     Row(
                       children: [
@@ -272,117 +391,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
-           //Fixture matches         
-          ALLmatches(),
+           //Fixture matches    
+                
+              ALLmatches(),
 
-
-          Row(
+                  Row(
                       children: [
-                        
                         Container(
-                          margin: EdgeInsets.only(top: 100,left: 10),
+                          margin: EdgeInsets.only(top: 350,left: 10),
                           child: FaIcon(
-                        FontAwesomeIcons.fireFlameCurved,
+                        FontAwesomeIcons.newspaper,
                         size: 21,)
                       ),
                       Container(
-                      margin: EdgeInsets.only(top: 100),
-                      child: Text('  News',
+                      margin: EdgeInsets.only(top: 350),
+                      child: Text(' News',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.bold,
                               fontSize: 17,color: Color.fromARGB(255, 83, 92, 101)),)
                       ),
                       ],
-                    ),
+                    ),    
       ],
       ),
     ),
     );
-      
   }
   }
-
-
-
-
-
-
-
-Widget ALLmatches(){
-
-  String match_status = "live";
-
-  Color? color = Color.fromARGB(174, 189, 189, 189) ;
- 
-List<Widget> matches= [];
-    for (var match in _fixture) {
-       if(match['status'] == "LIVE"){
-    color = Colors.green;
-  }
-  else if(match['status'] == "FINISHED"){
-    color = Colors.red[200]!;
-  }
-      matches.add(
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: InkWell(
-              onTap: (){},
-              child: Container(
-                margin: EdgeInsets.all(3),
-                  width: 200,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
-                  color: color,
-                  )                  ,
-                  child: Column(children: [
-                    Text(match['status'] != "LIVE"?  match['utcDate'].toString().substring(11,16) : match['minute'].toString()),
-                    SizedBox(height: 15,),
-                    Row(children: [
- Text("  ${match['homeTeam']['shortName']}"),
-    Spacer(), // <-- add Spacer widget
-    Flexible(
-      child: Text(match['status'] == "SCHEDULED" ?
-        "${match['score']['fullTime']['home']}" : " ",
-        textAlign: TextAlign.right,
-        style: TextStyle(fontSize: 16.0),
-      ),
-    ),
-                    ],),
-
-                    SizedBox(height: 15,),
-                    
-                    Row(children: [
-                       Text("  ${match['awayTeam']['shortName']}"),
-    Spacer(), // <-- add Spacer widget
-    Flexible(
-      child: Text(match['status'] == "SCHEDULED" ?
-        "${match['score']['fullTime']['away']}" : " ",
-        textAlign: TextAlign.right,
-        style: TextStyle(fontSize: 16.0),
-      ),
-    ),
-                    ]),
-                    
-                    
-
-                    
-                  ]),
-              ),
-            ),
-            
-            ),
-        )
-      );
-    }
-    return Container(
-          height: 200,
-          margin: EdgeInsets.only(top: 130),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: matches
-          ),
-        );
-}
-
-
-
-

@@ -47,7 +47,6 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   google_nav_bar: ^5.0.6
   intl: ^0.17.0
-  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

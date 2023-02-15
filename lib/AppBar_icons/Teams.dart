@@ -16,6 +16,8 @@ class TeamsScreen extends StatefulWidget {
 }
 
 class _TeamsScreenState extends State<TeamsScreen> {
+ List<Widget> _favoriteTeams = [];
+  List _table = [];
 
    getTable() async {
     http.Response response1 = await http.get(
@@ -41,57 +43,80 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
 
   @override
-  Widget build(BuildContext context) {
-        return Scaffold(
-      backgroundColor: Color.fromRGBO(245 ,246 ,250,1),
-      appBar: AppBar(
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Color.fromRGBO(245, 246, 250, 1),
+    appBar: AppBar(
         title: Text("LiveSoccer"),
         toolbarHeight: 52,
-        backgroundColor: Color.fromRGBO(60, 93, 144, 1)),
-      body: Container(
-        child:Teams(),
-      ),
-    );
-  }
+        backgroundColor: Color.fromRGBO(60, 93, 144, 1),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return ListView(
+                    children: _favoriteTeams,
+                  );
+                },
+              );
+            },
+          )
+        ]),
+    body: Container(
+      child: Teams(),
+    ),
+  );
 }
 
 
 
-Widget Teams(){
-  List<Widget> Teams=[];
-  bool isClicked = false;
-  // card of teams of each League
-  for(var team in _table){
-    Teams.add(
+Widget Teams() {
+  List<Widget> teams = [];
+
+  for (var team in _table) {
+    bool isFavorite = _favoriteTeams.any((favorite) => favorite.key == ValueKey(team['id']));
+
+    teams.add(
       Card(
-              child: ListTile(
-                title: Text(team['name'].toString()),
-                trailing: IconButton(
-                  onPressed: (){
-                   if(!isClicked){
-                    isClicked = false;
-                   }else{
-                    isClicked=true;
-                   }
-                  },
-                 icon: isClicked ? const Icon(Icons.favorite,color: Colors.red,)
-                 : const Icon(Icons.favorite_border_outlined), 
-                 ),
-                leading: Transform.scale(
-                                  scale: 0.73,
-                                  child: SvgPicture.network(team['crestUrl'].toString(),height: 30,width: 30,)
-              ),
-              
-        )
+        child: ListTile(
+          title: Text(team['name'].toString()),
+          trailing: IconButton(
+            onPressed: () {
+              setState(() {
+                if (isFavorite) {
+                  _favoriteTeams.removeWhere((favorite) => favorite.key == ValueKey(team['id']));
+                } else {
+                  _favoriteTeams.add(ListTile(
+                    key: ValueKey(team['id']),
+                    title: Text(team['name'].toString()),
+                    leading: Transform.scale(
+                      scale: 0.73,
+                      child: SvgPicture.network(team['crestUrl'].toString(), height: 30, width: 30),
+                    ),
+                  ));
+                }
+              });
+            },
+            icon: isFavorite
+                ? const Icon(Icons.favorite, color: Colors.red)
+                : const Icon(Icons.favorite_border_outlined),
+          ),
+          leading: Transform.scale(
+            scale: 0.73,
+            child: SvgPicture.network(team['crestUrl'].toString(), height: 30, width: 30),
+          ),
         ),
-
-            );
-
+      ),
+    );
   }
 
   return SingleChildScrollView(
     child: Column(
-      children: Teams,
+      children: teams,
     ),
   );
+}
 }

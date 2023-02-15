@@ -11,6 +11,11 @@ class AddFavorite extends StatefulWidget {
 }
 
 class _AddFavoriteState extends State<AddFavorite> {
+  
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
