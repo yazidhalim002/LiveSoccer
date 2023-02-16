@@ -103,6 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? "\n" +
                                   match['utcDate'].toString().substring(11, 16)
                               : "\n" + match['status'],
+                  style: GoogleFonts.comfortaa(
+                      fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 15,
