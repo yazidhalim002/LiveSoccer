@@ -71,21 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
       bool isTimed = match['status'] == "TIMED";
       bool isFinished = match['status'] == "FINISHED";
       int? elapsed;
-
       bool isHomeTeamPng =
           match['homeTeam']['crest'].toString().contains('png');
       bool isAwayTeamPng =
           match['awayTeam']['crest'].toString().contains('png');
 
-      if (isLive) {
-        color = Colors.green;
-        elapsed = DateTime.now().difference(time).inMinutes;
-        elapsed = isPaused ? elapsed - int.parse(Chrono()) : elapsed;
-      } else if (isFinished) {
-        color = Colors.red[200]!;
-      } else {
-        color = Color.fromARGB(174, 189, 189, 189);
-      }
       if (match['competition']['code'] == "PD" ||
           match['competition']['code'] == "PL" ||
           match['competition']['code'] == "SA" ||
@@ -93,144 +83,179 @@ class _HomeScreenState extends State<HomeScreen> {
           match['competition']['code'] == "BL1" ||
           match['competition']['code'] == "CL" ||
           match['competition']['code'] == "EC") {
-        matches.add(Center(
-          child: Padding(
-              padding: const EdgeInsets.only(top: 0, left: 11),
-              child: Container(
-                margin: EdgeInsets.fromLTRB(0, 11, 21, 5),
-                width: 335,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                    color: Color(0xffffffff),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromARGB(112, 117, 117, 117),
-                          spreadRadius: 1,
-                          blurRadius: 15)
-                    ]),
-                child: Column(children: [
-                  isLive
-                      ? Container(
-                          margin: EdgeInsets.only(top: 10),
-                          height: 35,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Row(children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 10),
-                              height: 8,
-                              width: 8,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30)),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 7),
-                              child: Text(
-                                "LIVE",
-                                style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    height: 1.5,
-                                    fontSize: 18),
-                              ),
-                            ),
-                          ]),
-                        )
-                      : Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Text(
-                            match['utcDate'].toString().substring(11, 16),
-                            style: GoogleFonts.comfortaa(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                  Container(
-                    margin: EdgeInsets.only(top: 25, left: 30),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+        matches.add(GestureDetector(
+          onTap: () {},
+          child: Center(
+            child: Padding(
+                padding: const EdgeInsets.only(top: 0, left: 11),
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(0, 11, 21, 5),
+                  width: 335,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Color(0xffffffff),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromARGB(112, 117, 117, 117),
+                            spreadRadius: 1,
+                            blurRadius: 10)
+                      ]),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                            width: 50,
-                            height: 50,
-                            child: isHomeTeamPng
-                                ? Image.network(
-                                    match['homeTeam']['crest'],
-                                    height: 50,
-                                    width: 50,
-                                  )
-                                : SvgPicture.network(
-                                    match['homeTeam']['crest'],
-                                    height: 50,
-                                    width: 50,
-                                  )),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 24, 24, 0),
-                          child: isLive
-                              ? Text(
-                                  '${match['score']['fullTime']['home']}   -    ${match['score']['fullTime']['away']}',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.5,
-                                    color: Color(0xff000000),
+                        isLive
+                            ? Container(
+                                margin: EdgeInsets.only(top: 10),
+                                height: 25,
+                                width: 90,
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: Row(children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 8,
+                                    width: 8,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
                                   ),
-                                )
-                              : Text(
-                                  '          -         ',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.5,
-                                    color: Color(0xff000000),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 3),
+                                    child: Text(
+                                      "LIVE",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.5,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                  // Text('minute of the match')
+                                  Text("  " + match['minute'].toString())
+                                ]),
+                              )
+                            : Center(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 25),
+                                  child: Text(
+                                    match['utcDate']
+                                        .toString()
+                                        .substring(11, 16),
+                                    style: GoogleFonts.comfortaa(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                        ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 0, 0.86),
-                            child: isAwayTeamPng
-                                ? Image.network(
-                                    match['awayTeam']['crest'],
-                                    height: 50,
-                                    width: 50,
-                                  )
-                                : SvgPicture.network(
-                                    match['awayTeam']['crest'],
-                                    height: 50,
-                                    width: 50,
-                                  )),
+                              )
                       ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 67,
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  width: 50,
+                                  height: 50,
+                                  child: isHomeTeamPng
+                                      ? Image.network(
+                                          match['homeTeam']['crest'],
+                                          height: 50,
+                                          width: 50,
+                                        )
+                                      : SvgPicture.network(
+                                          match['homeTeam']['crest'],
+                                          height: 50,
+                                          width: 50,
+                                        )),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                child: Text(
+                                  '${match['homeTeam']['shortName']}',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 24, 24, 0),
+                            child: isLive
+                                ? Text(
+                                    '${match['score']['fullTime']['home']}   -    ${match['score']['fullTime']['away']}',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.5,
+                                      color: Color(0xff000000),
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(
+                                                left: 40, right: 4, bottom: 40),
+                                            child: Text(
+                                              '-',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.w700,
+                                                height: 1.5,
+                                                color: Color(0xff000000),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 0.86),
+                                child: isAwayTeamPng
+                                    ? Image.network(
+                                        match['awayTeam']['crest'],
+                                        height: 50,
+                                        width: 50,
+                                      )
+                                    : SvgPicture.network(
+                                        match['awayTeam']['crest'],
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                child: Text(
+                                  '${match['awayTeam']['shortName']}',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      Container(
-                        margin: EdgeInsets.only(left: 15),
-                        child: Text(
-                          '${match['homeTeam']['shortName']}',
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold, fontSize: 14),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 110),
-                        child: Text(
-                          '${match['awayTeam']['shortName']}',
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold, fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-              )),
+                    ),
+                  ]),
+                )),
+          ),
         ));
       }
     }

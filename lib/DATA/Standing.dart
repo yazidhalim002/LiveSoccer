@@ -152,7 +152,7 @@ Widget buildTableStanding() {
                       : Text(" " + team['position'].toString()),
                   Row(
                     children: [
-                      SvgPicture.network(team['team']['crestUrl'].toString(),
+                      SvgPicture.network(team['team']['crest'].toString(),
                           height: 40, width: 40),
                       team['team']['name'].toString().length > 20
                           ? Text(
