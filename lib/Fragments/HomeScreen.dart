@@ -72,6 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
       bool isFinished = match['status'] == "FINISHED";
       int? elapsed;
 
+      bool isHomeTeamPng =
+          match['homeTeam']['crest'].toString().contains('png');
+      bool isAwayTeamPng =
+          match['awayTeam']['crest'].toString().contains('png');
+
       if (isLive) {
         color = Colors.green;
         elapsed = DateTime.now().difference(time).inMinutes;
@@ -81,70 +86,157 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         color = Color.fromARGB(174, 189, 189, 189);
       }
-      matches.add(Center(
-        child: Padding(
-          padding: const EdgeInsets.all(11.0),
-          child: InkWell(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.all(3),
-              width: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: color,
-              ),
-              child: Column(children: [
-                Text(
+      if (match['competition']['code'] == "PD" ||
+          match['competition']['code'] == "PL" ||
+          match['competition']['code'] == "SA" ||
+          match['competition']['code'] == "FL1" ||
+          match['competition']['code'] == "BL1" ||
+          match['competition']['code'] == "CL" ||
+          match['competition']['code'] == "EC") {
+        matches.add(Center(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 0, left: 11),
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 11, 21, 5),
+                width: 335,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                    color: Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color.fromARGB(112, 117, 117, 117),
+                          spreadRadius: 1,
+                          blurRadius: 15)
+                    ]),
+                child: Column(children: [
                   isLive
-                      ? "\n" + "$elapsed"
-                      : isPaused
-                          ? "\n" + "Half Time"
-                          : isTimed
-                              ? "\n" +
-                                  match['utcDate'].toString().substring(11, 16)
-                              : "\n" + match['status'],
-                  style: GoogleFonts.comfortaa(
-                      fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  children: [
-                    Text("  ${match['homeTeam']['shortName']}"),
-                    Spacer(), // <-- add Spacer widget
-                    Flexible(
-                      child: Text(
-                        isTimed ? " " : "${match['score']['fullTime']['home']}",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(children: [
-                  Text("  ${match['awayTeam']['shortName']}"),
-                  Spacer(), // <-- add Spacer widget
-                  Flexible(
-                    child: Text(
-                      isTimed ? " " : "${match['score']['fullTime']['away']}",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(fontSize: 16.0),
+                      ? Container(
+                          margin: EdgeInsets.only(top: 10),
+                          height: 35,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Row(children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 10),
+                              height: 8,
+                              width: 8,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 7),
+                              child: Text(
+                                "LIVE",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.5,
+                                    fontSize: 18),
+                              ),
+                            ),
+                          ]),
+                        )
+                      : Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Text(
+                            match['utcDate'].toString().substring(11, 16),
+                            style: GoogleFonts.comfortaa(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                  Container(
+                    margin: EdgeInsets.only(top: 25, left: 30),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                            width: 50,
+                            height: 50,
+                            child: isHomeTeamPng
+                                ? Image.network(
+                                    match['homeTeam']['crest'],
+                                    height: 50,
+                                    width: 50,
+                                  )
+                                : SvgPicture.network(
+                                    match['homeTeam']['crest'],
+                                    height: 50,
+                                    width: 50,
+                                  )),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 24, 24, 0),
+                          child: isLive
+                              ? Text(
+                                  '${match['score']['fullTime']['home']}   -    ${match['score']['fullTime']['away']}',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.5,
+                                    color: Color(0xff000000),
+                                  ),
+                                )
+                              : Text(
+                                  '          -         ',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.5,
+                                    color: Color(0xff000000),
+                                  ),
+                                ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 0, 0.86),
+                            child: isAwayTeamPng
+                                ? Image.network(
+                                    match['awayTeam']['crest'],
+                                    height: 50,
+                                    width: 50,
+                                  )
+                                : SvgPicture.network(
+                                    match['awayTeam']['crest'],
+                                    height: 50,
+                                    width: 50,
+                                  )),
+                      ],
                     ),
                   ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 67,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: Text(
+                          '${match['homeTeam']['shortName']}',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 110),
+                        child: Text(
+                          '${match['awayTeam']['shortName']}',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  )
                 ]),
-              ]),
-            ),
-          ),
-        ),
-      ));
+              )),
+        ));
+      }
     }
     return Container(
       height: 200,
-      margin: EdgeInsets.only(top: 130),
+      margin: EdgeInsets.only(top: 200),
       child: ListView(scrollDirection: Axis.horizontal, children: matches),
     );
   }
@@ -152,143 +244,33 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(245, 246, 250, 1),
-      appBar: AppBar(
-        title: Text("LiveSoccer"),
-        toolbarHeight: 52,
-        backgroundColor: Color.fromRGBO(60, 93, 144, 1),
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              child: Row(
-                //spaceEvently make a small distance between the arguments
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TableScreen(code: 'PD'),
-                          ));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, top: 18),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(160, 255, 0, 0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-
-                        // transform.scale make the image smaller or bigger as what do you want
-                        child: Transform.scale(
-                          scale: 0.73,
-                          child: Image(
-                              image: AssetImage('assets/league/LIGA.png'),
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.fill),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TableScreen(code: 'PL'),
-                          ));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, top: 18),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(199, 80, 69, 208),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-                        child: Transform.scale(
-                          scale: 0.9,
-                          child: Image(
-                              image: AssetImage('assets/league/PRLEAGUE.png'),
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.fill),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TableScreen(code: 'SA'),
-                          ));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, top: 18),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(244, 72, 192, 229),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-                        child: Transform.scale(
-                          scale: 0.83,
-                          child: Image(
-                              image: AssetImage('assets/league/SERIE-A.png'),
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.fill),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TableScreen(code: 'FL1'),
-                          ));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, top: 18),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
+      backgroundColor: Color(0xfff5f5f5),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 50),
+                child: Row(
+                  //spaceEvently make a small distance between the arguments
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TableScreen(code: 'PD'),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 7, top: 18),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Color.fromARGB(181, 66, 140, 227),
+                            color: Color.fromARGB(160, 255, 0, 0),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black26,
@@ -296,95 +278,206 @@ class _HomeScreenState extends State<HomeScreen> {
                                 blurRadius: 6.0,
                               )
                             ],
-                            image: DecorationImage(
+                          ),
+
+                          // transform.scale make the image smaller or bigger as what do you want
+                          child: Transform.scale(
+                            scale: 0.73,
+                            child: Image(
+                                image: AssetImage('assets/league/LIGA.png'),
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.fill),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TableScreen(code: 'PL'),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 7, top: 18),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(199, 80, 69, 208),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0, 2),
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Transform.scale(
+                            scale: 0.9,
+                            child: Image(
+                                image: AssetImage('assets/league/PRLEAGUE.png'),
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.fill),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TableScreen(code: 'SA'),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 7, top: 18),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(244, 72, 192, 229),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0, 2),
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Transform.scale(
+                            scale: 0.83,
+                            child: Image(
+                                image: AssetImage('assets/league/SERIE-A.png'),
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.fill),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TableScreen(code: 'FL1'),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 7, top: 18),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(181, 66, 140, 227),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 6.0,
+                                )
+                              ],
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage('assets/league/ligue-1.png'))),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TableScreen(code: 'BL1'),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 7, top: 18),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(145, 60, 93, 144),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0, 2),
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Transform.scale(
+                            scale: 0.8,
+                            child: Image(
                                 image:
-                                    AssetImage('assets/league/ligue-1.png'))),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TableScreen(code: 'BL1'),
-                          ));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, top: 18),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(145, 60, 93, 144),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-                        child: Transform.scale(
-                          scale: 0.8,
-                          child: Image(
-                              image: AssetImage('assets/league/BANDESLIGA.png'),
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.fill),
+                                    AssetImage('assets/league/BANDESLIGA.png'),
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.fill),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
+                ),
+              ),
+
+              Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(top: 150, left: 10),
+                      child: FaIcon(
+                        FontAwesomeIcons.fireFlameCurved,
+                        size: 21,
+                      )),
+                  Container(
+                      margin: EdgeInsets.only(top: 150),
+                      child: Text(
+                        '  Upcoming Match',
+                        style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            height: 1.5,
+                            color: Color(0xff000000)),
+                      )),
                 ],
               ),
-            ),
 
-            Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.only(top: 100, left: 10),
-                    child: FaIcon(
-                      FontAwesomeIcons.fireFlameCurved,
-                      size: 21,
-                    )),
-                Container(
-                    margin: EdgeInsets.only(top: 100),
-                    child: Text(
-                      '  Most Fixture',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Color.fromARGB(255, 83, 92, 101)),
-                    )),
-              ],
-            ),
+              //Fixture matches
 
-            //Fixture matches
+              ALLmatches(),
 
-            ALLmatches(),
-
-            Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.only(top: 350, left: 10),
-                    child: FaIcon(
-                      FontAwesomeIcons.newspaper,
-                      size: 21,
-                    )),
-                Container(
-                    margin: EdgeInsets.only(top: 350),
-                    child: Text(
-                      ' News',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Color.fromARGB(255, 83, 92, 101)),
-                    )),
-              ],
-            ),
-          ],
+              Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(top: 420, left: 10),
+                      child: FaIcon(
+                        FontAwesomeIcons.newspaper,
+                        size: 21,
+                      )),
+                  Container(
+                      margin: EdgeInsets.only(top: 420),
+                      child: Text(
+                        ' News',
+                        style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            height: 1.5,
+                            color: Color(0xff000000)),
+                      )),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
