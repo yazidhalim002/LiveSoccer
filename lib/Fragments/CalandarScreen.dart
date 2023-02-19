@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 List _fixture = [];
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -14,7 +15,6 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   int selectedDay = 6;
-
 
   getAllMatches() async {
     http.Response response1 = await http.get(
@@ -28,8 +28,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       _fixture = standings;
     });
   }
-String datevar='';
-  
+
+  String datevar = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,54 +39,46 @@ String datevar='';
         toolbarHeight: 52,
         backgroundColor: Color.fromRGBO(60, 93, 144, 1),
       ),
-        backgroundColor: Color.fromRGBO(245, 245, 245, 1),
-        body: Container(
-          child: Stack(children: [
-
-            Container(
-              height: 60,
-              color: Colors.white70,
-              child: ListView.builder(
-                  
+      backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+      body: Container(
+        child: Stack(children: [
+          Container(
+            height: 60,
+            color: Colors.white70,
+            child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 15,
-                itemBuilder: (context,index){
-                    
-                    var date = DateTime.now().add(Duration(days: index - 6));
-                    var formattedDate = DateFormat("dd MMM").format(date);
-                   
+                itemBuilder: (context, index) {
+                  var date = DateTime.now().add(Duration(days: index - 6));
+                  var formattedDate = DateFormat("dd MMM").format(date);
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     child: GestureDetector(
-                      onTap: (){
-                         
-                        
-                          setState(() {
-                            
-                            selectedDay = index;
-                            print(datevar);
-                          });
-                        
+                      onTap: () {
+                        setState(() {
+                          selectedDay = index;
+                          print(datevar);
+                        });
                       },
                       child: Center(
-                        child: Text(formattedDate,style: TextStyle(
-                          fontSize: selectedDay != index ? 14 : 16,
-                          color: selectedDay == index ? Colors.blue : Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        child: Text(
+                          formattedDate,
+                          style: TextStyle(
+                            fontSize: selectedDay != index ? 14 : 16,
+                            color: selectedDay == index
+                                ? Colors.blue
+                                : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   );
                 }),
-              
-            ),
-          ]
-          
-          
           ),
-          
-        ),
-        );
+        ]),
+      ),
+    );
   }
 }

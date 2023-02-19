@@ -9,17 +9,15 @@ class TableScreen extends StatefulWidget {
   final String code;
 
   const TableScreen({super.key, required this.code});
- 
+
   @override
   _TableScreenState createState() => _TableScreenState();
 }
 
 class _TableScreenState extends State<TableScreen> {
-
   String _selectedValue = 'Standings';
-  final List _values = ["Standings","Top Scorers"];
+  final List _values = ["Standings", "Top Scorers"];
 
-  
   Widget _buildTable() {
     switch (_selectedValue) {
       case 'Standings':
@@ -30,8 +28,6 @@ class _TableScreenState extends State<TableScreen> {
         return Container();
     }
   }
-
- 
 
   @override
   Widget build(BuildContext context) {

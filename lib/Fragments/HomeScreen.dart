@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../DATA/TableScreen.dart';
+import 'package:livesoccer/DATA/TableScreen.dart';
 import 'package:http/http.dart' as http;
 
 List _fixture = [];
@@ -18,9 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Duration duration = Duration();
-  Timer? timer;
-
   AllMatches() async {
     http.Response response1 = await http.get(
         Uri.parse('http://api.football-data.org/v4/matches'),
@@ -38,31 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     AllMatches();
-    startTime();
-  }
-
-  void addTime() {
-    final addSeconds = 1;
-
-    setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-
-      duration = Duration(seconds: seconds);
-    });
-  }
-
-  void startTime() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
-  }
-
-  String Chrono() {
-    String digital(int n) => n.toString().padLeft(2, '0');
-    final minute = digital(duration.inMinutes.remainder(60));
-    return minute;
   }
 
   Widget ALLmatches() {
-    Color color;
     List<Widget> matches = [];
     for (var match in _fixture) {
       DateTime? time = DateTime.parse(match['utcDate']);
@@ -109,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? Container(
                                 margin: EdgeInsets.only(top: 10),
                                 height: 25,
-                                width: 90,
+                                width: 70,
                                 decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(30)),
@@ -134,23 +108,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fontSize: 16),
                                     ),
                                   ),
-                                  // Text('minute of the match')
-                                  Text("  " + match['minute'].toString())
                                 ]),
                               )
-                            : Center(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 25),
-                                  child: Text(
-                                    match['utcDate']
-                                        .toString()
-                                        .substring(11, 16),
-                                    style: GoogleFonts.comfortaa(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                            : isTimed
+                                ? Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 25),
+                                      child: Text(
+                                        match['utcDate']
+                                            .toString()
+                                            .substring(11, 16),
+                                        style: GoogleFonts.comfortaa(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 25),
+                                      child: Text(
+                                        "FINISHED",
+                                        style: GoogleFonts.comfortaa(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              )
                       ],
                     ),
                     Container(
@@ -160,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             children: [
                               Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                                   width: 50,
                                   height: 50,
                                   child: isHomeTeamPng
@@ -188,24 +172,47 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 24, 24, 0),
+                            margin: EdgeInsets.fromLTRB(20, 20, 20, 30),
                             child: isLive
-                                ? Text(
-                                    '${match['score']['fullTime']['home']}   -    ${match['score']['fullTime']['away']}',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.5,
-                                      color: Color(0xff000000),
-                                    ),
-                                  )
-                                : Row(
+                                ? Row(
                                     children: [
-                                      Row(
+                                      Text(
+                                        '${match['score']['fullTime']['home']}',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.5,
+                                          color: Color(0xff000000),
+                                        ),
+                                      ),
+                                      Text(
+                                        '  -  ',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.5,
+                                          color: Color(0xff000000),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${match['score']['fullTime']['away']}',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.5,
+                                          color: Color(0xff000000),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : isTimed
+                                    ? Row(
                                         children: [
                                           Container(
                                             padding: EdgeInsets.only(
-                                                left: 40, right: 4, bottom: 40),
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 10),
                                             child: Text(
                                               '-',
                                               style: GoogleFonts.poppins(
@@ -217,14 +224,69 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          match['score']['fullTime']['home'] >
+                                                  match['score']['fullTime']
+                                                      ['away']
+                                              ? Text(
+                                                  '${match['score']['fullTime']['home']}',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.w700,
+                                                    height: 1.5,
+                                                    color: Color.fromARGB(
+                                                        255, 81, 223, 56),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  '${match['score']['fullTime']['home']}',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.w700,
+                                                    height: 1.5,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                          Text(
+                                            '  -  ',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.5,
+                                              color: Color(0xff000000),
+                                            ),
+                                          ),
+                                          match['score']['fullTime']['home'] <
+                                                  match['score']['fullTime']
+                                                      ['away']
+                                              ? Text(
+                                                  '${match['score']['fullTime']['away']}',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.w700,
+                                                    height: 1.5,
+                                                    color: Color.fromARGB(
+                                                        255, 81, 223, 56),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  '${match['score']['fullTime']['away']}',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.w700,
+                                                    height: 1.5,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
                           ),
                           Column(
                             children: [
                               Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 0.86),
+                                margin: EdgeInsets.fromLTRB(0, 20, 0, 0.86),
                                 child: isAwayTeamPng
                                     ? Image.network(
                                         match['awayTeam']['crest'],
@@ -476,7 +538,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                 ],
               ),
-
               //Fixture matches
 
               ALLmatches(),

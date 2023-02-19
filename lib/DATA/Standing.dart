@@ -139,6 +139,7 @@ class _StandingState extends State<Standing> {
 Widget buildTableStanding() {
   List<Widget> teams = [];
   for (var team in _table) {
+    bool isPng = team['team']['crestUrl'].toString().contains('png');
     teams.add(
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
@@ -152,8 +153,16 @@ Widget buildTableStanding() {
                       : Text(" " + team['position'].toString()),
                   Row(
                     children: [
-                      SvgPicture.network(team['team']['crest'].toString(),
-                          height: 40, width: 40),
+                      !isPng
+                          ? SvgPicture.network(
+                              team['team']['crestUrl'].toString(),
+                              height: 43,
+                              width: 43)
+                          : Image.network(
+                              team['team']['crestUrl'].toString(),
+                              height: 43,
+                              width: 43,
+                            ),
                       team['team']['name'].toString().length > 20
                           ? Text(
                               team['team']['name'].toString().substring(0, 11) +
