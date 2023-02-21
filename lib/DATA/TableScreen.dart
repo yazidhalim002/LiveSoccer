@@ -32,35 +32,37 @@ class _TableScreenState extends State<TableScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 15, right: 15),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(10)),
-            child: DropdownButton(
-              value: _selectedValue,
-              isExpanded: false,
-              icon: Icon(Icons.arrow_drop_down),
-              dropdownColor: Colors.grey[200],
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedValue = newValue.toString();
-                });
-              },
-              items: _values.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(10)),
+              child: DropdownButton(
+                value: _selectedValue,
+                isExpanded: false,
+                icon: Icon(Icons.arrow_drop_down),
+                dropdownColor: Colors.grey[200],
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedValue = newValue.toString();
+                  });
+                },
+                items: _values.map((value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildTable(),
-          ),
-        ],
+            Expanded(
+              child: _buildTable(),
+            ),
+          ],
+        ),
       ),
     );
   }

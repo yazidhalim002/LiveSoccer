@@ -1,7 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,8 +15,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
 
-  Future SIGNUP() async {
-    if (CheckPassword()) {
+  Future signup() async {
+    if (checkpassword()) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
@@ -24,11 +24,28 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  bool CheckPassword() {
+  bool checkpassword() {
     if (_passwordController.text.trim() ==
         _confirmpasswordcontroller.text.trim()) {
       return true;
     } else {
+      final snackBar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Well done!',
+          message: 'the password doesnt match',
+
+          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+          contentType: ContentType.failure,
+        ),
+      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
       return false;
     }
   }
@@ -116,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: GestureDetector(
-                      onTap: SIGNUP,
+                      onTap: signup,
                       child: Container(
                         padding: EdgeInsets.only(
                             right: 80, left: 80, top: 17, bottom: 17),

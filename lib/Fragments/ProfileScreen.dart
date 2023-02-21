@@ -16,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser!;
 
    
-    void SIGNOUT()async{
+    void signout()async{
     FirebaseAuth.instance.signOut();
   }
 
@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 30),
             GestureDetector(
               
-                          onTap: SIGNOUT,
+                          onTap: signout,
                           child: Container(
                             
                             padding: EdgeInsets.only(

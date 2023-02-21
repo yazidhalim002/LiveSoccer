@@ -323,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return Container(
       height: 200,
-      margin: EdgeInsets.only(top: 200),
+      margin: EdgeInsets.only(top: 250),
       child: ListView(scrollDirection: Axis.horizontal, children: matches),
     );
   }
@@ -521,13 +521,13 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   Container(
-                      margin: EdgeInsets.only(top: 150, left: 10),
+                      margin: EdgeInsets.only(top: 200, left: 10),
                       child: FaIcon(
                         FontAwesomeIcons.fireFlameCurved,
                         size: 21,
                       )),
                   Container(
-                      margin: EdgeInsets.only(top: 150),
+                      margin: EdgeInsets.only(top: 200),
                       child: Text(
                         '  Upcoming Match',
                         style: GoogleFonts.poppins(
@@ -538,30 +538,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                 ],
               ),
+
               //Fixture matches
 
               ALLmatches(),
-
-              Row(
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(top: 420, left: 10),
-                      child: FaIcon(
-                        FontAwesomeIcons.newspaper,
-                        size: 21,
-                      )),
-                  Container(
-                      margin: EdgeInsets.only(top: 420),
-                      child: Text(
-                        ' News',
-                        style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            height: 1.5,
-                            color: Color(0xff000000)),
-                      )),
-                ],
-              ),
             ],
           ),
         ),

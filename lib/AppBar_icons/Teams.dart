@@ -19,10 +19,9 @@ class TeamsScreen extends StatefulWidget {
 }
 
 class _TeamsScreenState extends State<TeamsScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
-
   List<Widget> _favoriteTeams = [];
   List<Data> dataList = [];
+  final user = FirebaseAuth.instance.currentUser!;
 
   late DatabaseReference dbRef;
 
@@ -52,24 +51,10 @@ class _TeamsScreenState extends State<TeamsScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(245, 246, 250, 1),
       appBar: AppBar(
-          title: Text("LiveSoccer"),
-          toolbarHeight: 52,
-          backgroundColor: Color.fromRGBO(60, 93, 144, 1),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.favorite),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return ListView(
-                      children: _favoriteTeams,
-                    );
-                  },
-                );
-              },
-            )
-          ]),
+        title: Text("LiveSoccer"),
+        toolbarHeight: 52,
+        backgroundColor: Color.fromRGBO(60, 93, 144, 1),
+      ),
       body: Container(
         child: Teams(),
       ),
@@ -80,7 +65,10 @@ class _TeamsScreenState extends State<TeamsScreen> {
     List<Widget> teams = [];
 
     for (var team in _table) {
-      bool isFavorite = false;
+      bool isPng = team['crestUrl'].toString().contains('png');
+      bool isFavorite = _favoriteTeams
+          .any((favorite) => favorite.key == ValueKey(team['id']));
+      String teamId = team['id'].toString();
 
       teams.add(
         Card(
@@ -90,27 +78,53 @@ class _TeamsScreenState extends State<TeamsScreen> {
               onPressed: () {
                 setState(() {
                   if (isFavorite) {
+                    _favoriteTeams.removeWhere(
+                        (favorite) => favorite.key == ValueKey(team['id']));
+
+                    dbRef.child(teamId).remove();
                   } else {
-                    Map<String, String> FavTeam = {
-                      'user': '${user.email}',
+                    _favoriteTeams.add(ListTile(
+                      key: ValueKey(team['id']),
+                      title: Text(team['name'].toString()),
+                      leading: Transform.scale(
+                        scale: 0.73,
+                        child: isPng
+                            ? Image.network(
+                                team['crestUrl'].toString(),
+                                height: 30,
+                                width: 30,
+                              )
+                            : SvgPicture.network(
+                                team['crestUrl'].toString(),
+                                height: 30,
+                                width: 30,
+                              ),
+                      ),
+                    ));
+
+                    Map<String, String> FavTeams = {
                       'id': '${team['id']}',
-                      'name': '${team['shortName']}',
+                      'name': '${team['name']}',
+                      'user': '${user.email}',
                       'crest': '${team['crestUrl']}'
                     };
 
-                    dbRef.push().set(FavTeam);
-                    isFavorite = true;
+                    dbRef.child(teamId).set(FavTeams);
                   }
+
+                  // Remove the card from the _table list
+                  _table.remove(team);
                 });
               },
-              icon: isFavorite
-                  ? const Icon(Icons.favorite, color: Colors.red)
-                  : const Icon(Icons.favorite_border_outlined),
+              icon: const Icon(Icons.favorite_border_outlined),
             ),
             leading: Transform.scale(
               scale: 0.73,
-              child: SvgPicture.network(team['crestUrl'].toString(),
-                  height: 30, width: 30),
+              child: isPng
+                  ? Image.network(team['crestUrl'].toString(),
+                      height: 30, width: 30)
+                  : SvgPicture.network(team['crestUrl'].toString(),
+                      height: 30, width: 30),
             ),
           ),
         ),

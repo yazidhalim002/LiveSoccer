@@ -28,6 +28,7 @@ void main() async {
   HttpOverrides.global = new PostHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     initialRoute: '/',

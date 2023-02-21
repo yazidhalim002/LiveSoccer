@@ -47,6 +47,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   intl: ^0.17.0
   firebase_database: ^10.0.13
+  hive: ^2.2.3
 
 dev_dependencies:
   flutter_test:
