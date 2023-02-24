@@ -43,7 +43,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
   void initState() {
     super.initState();
     getTable();
-    dbRef = FirebaseDatabase.instance.ref().child('Favorite_Teams');
+    dbRef = FirebaseDatabase.instance.ref();
   }
 
   @override
@@ -81,7 +81,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     _favoriteTeams.removeWhere(
                         (favorite) => favorite.key == ValueKey(team['id']));
 
-                    dbRef.child(teamId).remove();
+                    dbRef.child(user.uid).child(user.uid).remove();
                   } else {
                     _favoriteTeams.add(ListTile(
                       key: ValueKey(team['id']),
@@ -109,7 +109,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                       'crest': '${team['crestUrl']}'
                     };
 
-                    dbRef.child(teamId).set(FavTeams);
+                    dbRef.child(user.uid).child(teamId).set(FavTeams);
                   }
 
                   // Remove the card from the _table list

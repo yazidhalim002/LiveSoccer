@@ -227,9 +227,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       )
                                     : Row(
                                         children: [
-                                          match['score']['fullTime']['home'] >
-                                                  match['score']['fullTime']
-                                                      ['away']
+                                          match['score']['fullTime']['home'] > match['score']['fullTime']['away']
                                               ? Text(
                                                   '${match['score']['fullTime']['home']}',
                                                   style: GoogleFonts.poppins(
@@ -321,10 +319,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ));
       }
     }
-    return Container(
-        height: 200,
-        margin: EdgeInsets.only(top: 150),
-        child: ListView(scrollDirection: Axis.horizontal, children: matches));
+    return matches != null
+        ? Container(
+            height: 200,
+            margin: EdgeInsets.only(top: 150),
+            child:
+                ListView(scrollDirection: Axis.horizontal, children: matches))
+        : Container();
   }
 
   @override
@@ -357,7 +358,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         setState(() {
                           selectedDay = index;
                           getMatches(dateMatch: dateMatch);
-                          print(dateMatch);
                         });
                       },
                       child: Center(
@@ -376,7 +376,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   );
                 }),
           ),
-          SizedBox(
+          const SizedBox(
             height: 100,
           ),
           ALLmatches(),

@@ -73,7 +73,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
-        Navigator.of(context).pushReplacementNamed('forgot');
+      Navigator.of(context).pushReplacementNamed('forgot');
     }
   }
 
@@ -114,7 +114,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
           ),
           Container(
               child: Container(
-                  padding: EdgeInsets.only(top: 400, right: 35, left: 35),
+                  padding: EdgeInsets.only(top: 450, right: 35, left: 35),
                   child: Column(children: [
                     //Email TexField
 

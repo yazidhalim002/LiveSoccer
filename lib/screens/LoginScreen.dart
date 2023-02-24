@@ -16,8 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
 
   Future signIn() async {
-    
-
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -27,9 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim()
-     , password: passwordController.text.trim());
-     Navigator.of(context).pushNamed('tabscreen');
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+      Navigator.of(context).pushNamed('tabscreen');
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         /// need to set following properties for best effect of awesome_snackbar_content
@@ -48,10 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
-        Navigator.of(context).pushReplacementNamed('login');
+      Navigator.of(context).pushReplacementNamed('login');
     }
-
-
   }
 
   void openSignupScreen() {

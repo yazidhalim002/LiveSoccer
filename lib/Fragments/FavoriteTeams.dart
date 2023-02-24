@@ -15,16 +15,16 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  Query dbRef = FirebaseDatabase.instance.ref().child('Favorite_Teams');
-
   late DatabaseReference DatabaseRef;
   late Map favoriteTeams;
 
   final user = FirebaseAuth.instance.currentUser!;
+
   @override
   void initState() {
     super.initState();
-    DatabaseRef = FirebaseDatabase.instance.ref().child('Favorite_Teams');
+    DatabaseRef = FirebaseDatabase.instance.ref().child(user.uid);
+    String userUid = user.uid;
   }
 
   Widget favorite({required Map favorite_teams}) {
@@ -60,6 +60,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Query dbRef = FirebaseDatabase.instance.ref().child(user.uid);
+
     return Scaffold(
         backgroundColor: Color.fromRGBO(245, 245, 245, 1),
         appBar: AppBar(
