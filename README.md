@@ -14,7 +14,7 @@ in this page as you can see you can continue with facebook or google or you can 
 
 these function i have do it using Firebase Authentification where you can find a lot of function to do the login part such as tiktok , google , phone number ...
 
-<img width="190" alt="Capture d'écran_20230223_122318" src="https://user-images.githubusercontent.com/117197658/229488293-73d61a05-2b0d-403b-ac19-18f3864457bc.png"><img width="190" alt="Capture d'écran_20230223_122418" src="https://user-images.githubusercontent.com/117197658/229489233-f14c6eb0-6cab-494b-8e59-b048a461b99f.png"><img width="187" alt="Capture d'écran_20230223_122448" src="https://user-images.githubusercontent.com/117197658/229489245-4dc45daa-ffe5-4c6c-b1ae-ec8902bf5a49.png">
+<img width="190" alt="Capture d'écran_20230223_122318" src="https://user-images.githubusercontent.com/117197658/229488293-73d61a05-2b0d-403b-ac19-18f3864457bc.png">  <img width="190" alt="Capture d'écran_20230223_122418" src="https://user-images.githubusercontent.com/117197658/229489233-f14c6eb0-6cab-494b-8e59-b048a461b99f.png">  <img width="187" alt="Capture d'écran_20230223_122448" src="https://user-images.githubusercontent.com/117197658/229489245-4dc45daa-ffe5-4c6c-b1ae-ec8902bf5a49.png">
 
 in this page as you can see you can continue with facebook or google or you can login if you already have an account or you can sign up if you are new client
 
@@ -26,11 +26,7 @@ here where you can find the 5 star league you have the access to each league you
 
 where you also can find the fixture of the day live or the match will play in the near future
 
-<img width="190" alt="Capture d'écran_20230224_155856" src="https://user-images.githubusercontent.com/117197658/229493633-0d092e54-7777-450f-951a-036e1160d4b9.png">
-
-<img width="194" alt="Capture d'écran_20230224_155922" src="https://user-images.githubusercontent.com/117197658/229493648-9069f848-c307-474d-a08e-a3bf941c7c0a.png">
-
-<img width="192" alt="Capture d'écran_20230224_155942" src="https://user-images.githubusercontent.com/117197658/229493675-2621a225-45f6-4d3f-badf-dbd53d8cbc0c.png">
+<img width="190" alt="Capture d'écran_20230224_155856" src="https://user-images.githubusercontent.com/117197658/229493633-0d092e54-7777-450f-951a-036e1160d4b9.png">  <img width="194" alt="Capture d'écran_20230224_155922" src="https://user-images.githubusercontent.com/117197658/229493648-9069f848-c307-474d-a08e-a3bf941c7c0a.png">  <img width="192" alt="Capture d'écran_20230224_155942" src="https://user-images.githubusercontent.com/117197658/229493675-2621a225-45f6-4d3f-badf-dbd53d8cbc0c.png">
 
  - Favorite Page
 
